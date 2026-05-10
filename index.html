@@ -14,21 +14,22 @@
             --correct: #27ae60; 
             --wrong: #e74c3c;
             --passage-bg: rgba(0,0,0,0.03);
+            --blue-glow: rgba(52, 152, 219, 0.3);
         }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-color); display: flex; justify-content: center; padding: 20px; margin: 0; user-select: none; }
         
-        /* تأثير النبض المتطابق مع الثيم */
+        /* ثيم النبض المتطابق مع طلبك */
         @keyframes pulse-blue { 
-            0% { transform: scale(1); box-shadow: 0 4px 10px rgba(0,0,0,0.1); } 
-            50% { transform: scale(1.03); box-shadow: 0 0 20px rgba(52, 152, 219, 0.3); } 
-            100% { transform: scale(1); box-shadow: 0 4px 10px rgba(0,0,0,0.1); } 
+            0% { transform: scale(1); box-shadow: 0 4px 10px rgba(0,0,0,0.05); } 
+            50% { transform: scale(1.03); box-shadow: 0 0 15px var(--blue-glow); border-color: #3498db; } 
+            100% { transform: scale(1); box-shadow: 0 4px 10px rgba(0,0,0,0.05); } 
         }
 
-        .quiz-card { background: var(--white); width: 100%; max-width: 900px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 15px solid var(--main-color); padding: 35px; position: relative; }
+        .quiz-card { background: var(--white); width: 100%; max-width: 900px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-top: 15px solid var(--main-color); padding: 35px; position: relative; }
         .header { text-align: center; border-bottom: 2px solid #f0f0f0; margin-bottom: 25px; padding-bottom: 15px; }
         .nav-bar { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 15px 25px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #e2e8f0; }
         
-        .q-type-badge { background: var(--main-color); color: white; padding: 10px 25px; border-radius: 10px; font-size: 1.1rem; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .q-type-badge { background: var(--main-color); color: white; padding: 10px 25px; border-radius: 10px; font-size: 1.1rem; font-weight: bold; }
         .q-text { font-size: 1.7rem; font-weight: bold; text-align: center; line-height: 1.8; color: #1e293b; padding: 15px; }
         
         .reading-passage { background-color: var(--passage-bg); border-right: 8px solid var(--main-color); padding: 25px; margin: 20px 0; border-radius: 12px; text-align: justify; font-size: 1.25rem; line-height: 2; color: #334155; }
@@ -39,20 +40,16 @@
             text-align: center; font-size: 1.35rem; background: #fff; transition: all 0.3s ease; 
             color: #334155; font-weight: 600; animation: pulse-blue 3s infinite ease-in-out;
         }
-        .opt:hover { border-color: #3498db; background: #f0f9ff; transform: translateY(-3px); }
+        .opt:hover { border-color: #3498db; background: #f0f9ff; }
         
-        /* ألوان النتيجة النهائية */
-        .correct { background: var(--correct) !important; color: white !important; border-color: var(--correct) !important; animation: none !important; box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4) !important; }
-        .wrong { background: var(--wrong) !important; color: white !important; border-color: var(--wrong) !important; animation: none !important; box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4) !important; }
+        .correct { background: var(--correct) !important; color: white !important; border-color: var(--correct) !important; animation: none !important; }
+        .wrong { background: var(--wrong) !important; color: white !important; border-color: var(--wrong) !important; animation: none !important; }
         
         .btn { background: var(--main-color); color: white; padding: 16px 60px; border: none; border-radius: 12px; cursor: pointer; font-size: 1.2rem; font-weight: bold; transition: 0.3s; }
-        .btn:hover { opacity: 0.9; transform: scale(1.02); }
-        
         .hidden { display: none !important; }
-        input { width: 85%; padding: 18px; border-radius: 12px; border: 2px solid #e2e8f0; margin-bottom: 20px; text-align: center; font-size: 1.2rem; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--main-color); box-shadow: 0 0 10px rgba(44, 62, 80, 0.1); }
-        
-        @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } .quiz-card { padding: 20px; } }
+        input { width: 85%; padding: 18px; border-radius: 12px; border: 2px solid #e2e8f0; margin-bottom: 20px; text-align: center; font-size: 1.2rem; }
+
+        @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -65,22 +62,22 @@
 
     <div id="lock-screen" class="hidden" style="text-align: center; padding: 50px 20px;">
         <div style="font-size: 5rem; margin-bottom: 20px;">🔒</div>
-        <h2 style="color: var(--wrong); font-size: 2rem;">تنبيه: محاولة دخول مكررة</h2>
-        <p id="lock-message" style="font-size: 1.4rem; color: #64748b; line-height: 1.6;"></p>
+        <h2 style="color: var(--wrong);">محاولة دخول مكررة</h2>
+        <p id="lock-message" style="font-size: 1.4rem; color: #64748b;"></p>
         <button class="btn" onclick="location.reload()" style="margin-top: 25px;">العودة</button>
     </div>
 
     <div id="start-page" style="text-align: center;">
-        <p style="font-size: 1.3rem; margin-bottom: 20px; color: #475569;">سجل دخولك باستخدام بريد منصة مدرستي</p>
+        <p style="font-size: 1.2rem; margin-bottom: 20px;">أدخل إيميل منصة مدرستي لبدء التحدي</p>
         <input type="email" id="studentEmail" placeholder="sxxxxxxx@rb.moe.gov.sa">
         <br>
-        <button class="btn" onclick="verifyAndStart()">ابدأ التحدي الآن 🚀</button>
-        <p id="status-msg" style="margin-top: 20px; font-weight: bold; color: var(--main-color);"></p>
+        <button class="btn" onclick="verifyAndStart()">دخول المنصة 🚀</button>
+        <p id="status-msg" style="margin-top: 20px; font-weight: bold;"></p>
     </div>
 
     <div id="quiz-page" class="hidden">
         <div class="nav-bar">
-            <div id="q-counter" style="font-weight: 800; color: #1e293b;"></div>
+            <div id="q-counter" style="font-weight: 800;"></div>
             <div id="challenger-display" style="font-weight: 800; color: var(--main-color);"></div> 
             <div id="timer" style="font-weight: 900; font-size: 1.8rem; color: var(--wrong);">45</div>
         </div>
@@ -94,15 +91,14 @@
         </div>
     </div>
 
-    <div id="result-page" class="hidden" style="text-align: center; padding: 40px 10px;">
-        <h2 id="final-greeting" style="line-height: 1.6; color: #1e293b;"></h2>
+    <div id="result-page" class="hidden" style="text-align: center;">
+        <h2 id="final-greeting"></h2>
         <div style="font-size: 6rem; font-weight: 900; margin: 30px 0; color: var(--main-color);" id="score-text"></div>
-        <button class="btn" onclick="location.reload()">إنهاء الجلسة</button>
+        <button class="btn" onclick="location.reload()">خروج</button>
     </div>
 </div>
 
 <script>
-    // --- مصفوفة الأقسام الستة للتعديل ---
     const rawQuizData = [
     // --- التناظر اللفظي (10 أسئلة) ---
     { t: "التناظر اللفظي", q: "غرفة : فندق", opts: ["غصن : شجرة", "شارع : مدينة", "وجه : أنف", "بحر : سمك"], ans: "غصن : شجرة" },
@@ -172,15 +168,12 @@
 
     async function verifyAndStart() {
         const emailInput = document.getElementById('studentEmail').value.trim().toLowerCase();
-        if(!emailInput.includes('@')) return alert("يرجى إدخال إيميل مدرستي الصحيح");
-        document.getElementById('status-msg').innerText = "جاري التحقق من الصلاحيات... ⏳";
+        if(!emailInput.includes('@')) return alert("يرجى إدخال إيميل مدرستي");
+        document.getElementById('status-msg').innerText = "جاري التحقق... ⏳";
 
         try {
             const allowedDoc = await db.collection("allowed_students").doc(emailInput).get();
-            if (!allowedDoc.exists) {
-                document.getElementById('status-msg').innerText = "";
-                return alert("عذراً، هذا الإيميل غير مدرج في قائمة الطلاب المسموح لهم.");
-            }
+            if (!allowedDoc.exists) return alert("الإيميل غير مسجل");
 
             sName = allowedDoc.data().name;
             sEmail = emailInput;
@@ -192,7 +185,7 @@
             if (!resultCheck.empty) {
                 document.getElementById('start-page').classList.add('hidden');
                 document.getElementById('lock-screen').classList.remove('hidden');
-                document.getElementById('lock-message').innerText = `يا ${sName}، نعتز بحماسك، ولكن النظام يسجل دخولاً واحداً فقط لكل نموذج لضمان العدالة.`;
+                document.getElementById('lock-message').innerText = `يا ${sName}، لقد أديت هذا الاختبار مسبقاً.`;
                 return;
             }
 
@@ -201,13 +194,12 @@
             document.getElementById('start-page').classList.add('hidden');
             document.getElementById('quiz-page').classList.remove('hidden');
             loadQuestion();
-        } catch (e) { alert("خطأ في الاتصال بالسيرفر. تأكد من الإنترنت."); }
+        } catch (e) { alert("خطأ في الاتصال."); }
     }
 
     function loadQuestion() {
         if(currentIdx >= finalQuestions.length) return finish();
         const data = finalQuestions[currentIdx];
-        
         document.getElementById('q-counter').innerText = `سؤال ${currentIdx+1} / ${finalQuestions.length}`;
         document.getElementById('q-type-label').innerText = data.t;
         document.getElementById('question-text').innerHTML = data.q;
@@ -220,18 +212,12 @@
                 clearInterval(timer);
                 const isCorrect = (o === data.ans);
                 if(isCorrect) userScore++;
-
                 userAnswers.push({
-                    qText: data.q.replace(/<[^>]*>?/gm, '').substring(0, 60) + "...",
-                    qType: data.t,
-                    studentAns: o,
-                    correctAns: data.ans,
-                    isCorrect: isCorrect
+                    qText: data.q.replace(/<[^>]*>?/gm, '').substring(0, 60),
+                    qType: data.t, studentAns: o, correctAns: data.ans, isCorrect: isCorrect
                 });
-
                 document.querySelectorAll('.opt').forEach(el => {
-                    el.onclick = null;
-                    el.style.animation = "none";
+                    el.onclick = null; el.style.animation = "none";
                     if(el.innerText === data.ans) el.classList.add('correct');
                     else if(el.innerText === o) el.classList.add('wrong');
                 });
@@ -249,7 +235,7 @@
             s--; document.getElementById('timer').innerText = s;
             if(s<=0) { 
                 clearInterval(timer); 
-                userAnswers.push({ qText: "سؤال غير مجاب", studentAns: "انتهى الوقت", correctAns: finalQuestions[currentIdx].ans, isCorrect: false });
+                userAnswers.push({ qText: "لم يجب", studentAns: "وقت", correctAns: finalQuestions[currentIdx].ans, isCorrect: false });
                 nextQuestion(); 
             }
         }, 1000);
@@ -260,9 +246,8 @@
     async function finish() {
         document.getElementById('quiz-page').classList.add('hidden');
         document.getElementById('result-page').classList.remove('hidden');
-        document.getElementById('final-greeting').innerHTML = `عمل رائع يا <b>${sName}</b>! <br> استمر في تطوير مهاراتك اللفظية 💐`;
+        document.getElementById('final-greeting').innerHTML = `عمل رائع يا <b>${sName}</b>! 💐`;
         document.getElementById('score-text').innerText = `${userScore} / ${finalQuestions.length}`;
-        
         await db.collection("student_results").add({ 
             name: sName, email: sEmail, score: userScore, total: finalQuestions.length, 
             model_id: currentModelId, answers: userAnswers,
