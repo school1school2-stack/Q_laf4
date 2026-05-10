@@ -88,12 +88,14 @@
         <div style="text-align: center; margin-top: 35px;">
             <button id="next-btn" class="btn hidden" onclick="nextQuestion()">السؤال التالي ⮕</button>
         </div>
+    </div>
 
     <div id="result-page" class="hidden" style="text-align: center;">
         <h2 id="final-greeting"></h2>
         <div style="font-size: 5rem; font-weight: bold; margin: 25px 0; color: var(--main-color);" id="score-text"></div>
         <button class="btn" onclick="location.reload()">خروج</button>
     </div>
+</div>
 
 <script>
     // 1. إعدادات Firebase
@@ -129,6 +131,7 @@
     // 3. مصفوفة الـ 40 سؤالاً
     const rawQuizData = [
         // تناظر لفظي
+    // --- 1. التناظر اللفظي (8 أسئلة) ---
     { t: "التناظر اللفظي", q: "غصن : شجرة", opts: ["ورقة : كتاب", "مبنى : مدينة", "نخلة : تمر", "بحر : سمك"], ans: "ورقة : كتاب" },
     { t: "التناظر اللفظي", q: "قدم : حذاء", opts: ["خاتم : إصبع", "عين : نظارة", "يد : قفاز", "ساعة : معصم"], ans: "يد : قفاز" },
     { t: "التناظر اللفظي", q: "عجين : خبز", opts: ["رمل : زجاج", "حديد : مغناطيس", "نواة : نخلة", "ماء : ثلج"], ans: "رمل : زجاج" },
