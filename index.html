@@ -7,21 +7,28 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <style>
-        :root { --main-color: #2c3e50; --bg-color: #f4f7f6; --white: #ffffff; --correct: #27ae60; --wrong: #e74c3c; --passage-bg: rgba(0,0,0,0.03); }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-color); display: flex; justify-content: center; padding: 20px; margin: 0; user-select: none; }
+        :root { 
+            --main-color: #2c3e50; 
+            --bg-color: #f4f7f6; 
+            --white: #ffffff; 
+            --correct: #27ae60; 
+            --wrong: #e74c3c;
+            --passage-bg: rgba(0,0,0,0.03);
+        }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-color); display: flex; justify-content: center; padding: 20px; margin: 0; user-select: none; transition: background 0.5s; }
         .quiz-card { background: var(--white); width: 100%; max-width: 900px; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.08); border-top: 12px solid var(--main-color); padding: 35px; }
         .header { text-align: center; border-bottom: 2px solid #f0f0f0; margin-bottom: 25px; padding-bottom: 15px; }
         .nav-bar { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.02); padding: 15px 25px; border-radius: 10px; margin-bottom: 25px; border: 1px solid #eee; }
         .q-type-badge { background: var(--main-color); color: white; padding: 8px 20px; border-radius: 8px; font-weight: bold; }
         .q-text { font-size: 1.5rem; font-weight: bold; text-align: center; line-height: 1.8; color: #2c3e50; margin: 20px 0; }
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .opt { padding: 18px; border: 2px solid #ecf0f1; border-radius: 12px; cursor: pointer; text-align: center; font-size: 1.2rem; font-weight: 600; transition: 0.2s; }
-        .opt:hover { border-color: var(--main-color); }
+        .opt { padding: 18px; border: 2px solid #ecf0f1; border-radius: 12px; cursor: pointer; text-align: center; font-size: 1.2rem; font-weight: 600; transition: 0.2s; background: #fff; }
+        .opt:hover { border-color: var(--main-color); background: #f9fbfb; }
         .correct { background: var(--correct) !important; color: white !important; border-color: var(--correct) !important; }
         .wrong { background: var(--wrong) !important; color: white !important; border-color: var(--wrong) !important; }
         .btn { background: var(--main-color); color: white; padding: 15px 40px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.1rem; }
         .hidden { display: none !important; }
-        input { width: 80%; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 15px; text-align: center; }
+        input { width: 80%; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 15px; text-align: center; font-size: 1.1rem; }
         @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -34,33 +41,34 @@
     </div>
 
     <div id="start-page" style="text-align: center;">
-        <input type="email" id="studentEmail" placeholder="أدخل إيميل منصة مدرستي">
+        <input type="email" id="studentEmail" placeholder="أدخل إيميل منصة مدرستي لبدء التحدي">
         <br>
-        <button class="btn" onclick="verifyAndStart()">بدء التحدي 🚀</button>
-        <p id="status-msg"></p>
+        <button class="btn" onclick="verifyAndStart()">دخول المنصة 🚀</button>
+        <p id="status-msg" style="margin-top: 15px; font-weight: bold;"></p>
     </div>
 
     <div id="quiz-page" class="hidden">
         <div class="nav-bar">
-            <div id="q-counter"></div>
-            <div id="timer" style="font-weight: bold; color: var(--wrong); font-size: 1.4rem;">45</div>
+            <div id="q-counter" style="font-weight: bold;"></div>
+            <div id="timer" style="font-weight: 900; font-size: 1.5rem; color: var(--wrong);">45</div>
         </div>
-        <div style="text-align: center;"><span id="q-type-label" class="q-type-badge"></span></div>
+        <div style="text-align: center; margin-bottom: 15px;"><span id="q-type-label" class="q-type-badge"></span></div>
         <div id="question-text" class="q-text"></div>
         <div id="options-area" class="options-grid"></div>
-        <div style="text-align: center; margin-top: 30px;">
-            <button id="next-btn" class="btn hidden" onclick="nextQuestion()">التالي ⮕</button>
+        <div style="text-align: center; margin-top: 35px;">
+            <button id="next-btn" class="btn hidden" onclick="nextQuestion()">السؤال التالي ⮕</button>
         </div>
     </div>
 
     <div id="result-page" class="hidden" style="text-align: center;">
         <h2 id="final-greeting"></h2>
-        <div style="font-size: 4rem; font-weight: bold; margin: 20px; color: var(--main-color);" id="score-text"></div>
+        <div style="font-size: 4.5rem; font-weight: bold; margin: 20px 0; color: var(--main-color);" id="score-text"></div>
         <button class="btn" onclick="location.reload()">خروج</button>
     </div>
 </div>
 
 <script>
+    // 1. إعدادات Firebase
     const firebaseConfig = { 
         apiKey: "AIzaSyBkCO7FDQXd89YDf843J4_AtvEFvzzt-R0", 
         authDomain: "aztlg-494c3.firebaseapp.com", 
@@ -72,8 +80,22 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
+    // 2. مصفوفة الثيمات العشوائية
+    const themes = [
+        {main: "#800000", bg: "#fdf1f1", pbg: "rgba(128, 0, 0, 0.05)"},
+        {main: "#2c3e50", bg: "#f4f7f6", pbg: "rgba(44, 62, 80, 0.05)"},
+        {main: "#1e3a8a", bg: "#eff6ff", pbg: "rgba(30, 58, 138, 0.05)"},
+        {main: "#065f46", bg: "#ecfdf5", pbg: "rgba(6, 95, 70, 0.05)"},
+        {main: "#b45309", bg: "#fffbeb", pbg: "rgba(180, 83, 9, 0.05)"},
+        {main: "#6d28d9", bg: "#f5f3ff", pbg: "rgba(109, 40, 217, 0.05)"}
+    ];
+    const theme = themes[Math.floor(Math.random() * themes.length)];
+    document.documentElement.style.setProperty('--main-color', theme.main);
+    document.documentElement.style.setProperty('--bg-color', theme.bg);
+    document.documentElement.style.setProperty('--passage-bg', theme.pbg);
+
+    // 3. مصفوفة الأسئلة (40 سؤالاً)
     const rawQuizData = [
-        // --- تناظر لفظي ---
         { t: "تناظر لفظي", q: "غرفة : فندق", opts: ["غصن : شجرة", "شارع : مدينة", "وجه : أنف", "بحر : سمك"], ans: "غصن : شجرة" },
         { t: "تناظر لفظي", q: "رمل : زجاج", opts: ["خشب : ورق", "حديد : مغناطيس", "ماء : ثلج", "نار : دخان"], ans: "خشب : ورق" },
         { t: "تناظر لفظي", q: "دقيقة : ساعة", opts: ["يوم : أسبوع", "ثانية : دقيقة", "شهر : سنة", "قرن : عام"], ans: "ثانية : دقيقة" },
@@ -84,7 +106,6 @@
         { t: "تناظر لفظي", q: "اجتهاد : نجاح", opts: ["ركض : تعب", "ألم : مرض", "نوم : ليل", "سفر : حقيبة"], ans: "ركض : تعب" },
         { t: "تناظر لفظي", q: "غزال : رشاقة", opts: ["أسد : قوة", "ثعلب : مكر", "جمل : صبر", "نملة : نظام"], ans: "ثعلب : مكر" },
         { t: "تناظر لفظي", q: "مشرط : جراح", opts: ["قلم : كاتب", "منشار : خشب", "طائرة : طيار", "مقص : قماش"], ans: "قلم : كاتب" },
-        // --- إكمال الجمل ---
         { t: "إكمال الجمل", q: "المتوكل هو الذي ...... بالأسباب و...... على رب الأرباب.", opts: ["يأخذ - يتوكل", "يترك - يعتمد", "ينسى - يرضى", "يهمل - يثق"], ans: "يأخذ - يتوكل" },
         { t: "إكمال الجمل", q: "من وعظ أخاه ...... فقد زانه، ومن وعظه ...... فقد شانه.", opts: ["سراً - علانية", "جهراً - سراً", "دائماً - يوماً", "بأدب - بغلظة"], ans: "سراً - علانية" },
         { t: "إكمال الجمل", q: "إذا كنت تحب الصعود فلا بد أن ...... عن ذرات ...... .", opts: ["تتخلى - الغرور", "تبحث - النجاح", "تدافع - الكرامة", "تتحدث - الفخر"], ans: "تتخلى - الغرور" },
@@ -95,7 +116,6 @@
         { t: "إكمال الجمل", q: "من ...... في عمله ساد، ومن ...... في قوله قاد.", opts: ["أخلص - صدق", "أسرع - أجمل", "تعب - أطال", "اجتهد - أكثر"], ans: "أخلص - صدق" },
         { t: "إكمال الجمل", q: "الاعتذار لا يعني دائماً أنك على ...... ، بل يعني أنك تقدّر ...... أكثر من ذاتك.", opts: ["خطأ - علاقتك", "حق - كرامتك", "يقين - نفسك", "باطل - قيمتك"], ans: "خطأ - علاقتك" },
         { t: "إكمال الجمل", q: "قطرة الماء ...... الصخر، ليس بالعنف ولكن بـ ...... .", opts: ["تفتت - التكرار", "تكسر - القوة", "تذيب - الحرارة", "تثقب - الصمود"], ans: "تفتت - التكرار" },
-        // --- الخطأ السياقي ---
         { t: "الخطأ السياقي", q: "من لانت كلمته وجبت محبته، فالكلمة الفظة تفتح القلوب القاسية.", opts: ["لانت", "محبته", "الفظة", "تفتح"], ans: "تفتح" },
         { t: "الخطأ السياقي", q: "المرء الناجح هو من يغلق أذنيه عن النجاح، ويستمر في العمل الدؤوب.", opts: ["الناجح", "يغلق", "النجاح", "الدؤوب"], ans: "النجاح" },
         { t: "الخطأ السياقي", q: "الكتب هي خزائن العلم، فاحرص على إهمالها لتنال المعرفة الواسعة.", opts: ["خزائن", "احرص", "إهمالها", "المعرفة"], ans: "إهمالها" },
@@ -104,7 +124,6 @@
         { t: "الخطأ السياقي", q: "الرجل الصالح هو من يرى محاسن الناس ويخفي عيوبهم، ويذكر المساوئ في غيبتهم.", opts: ["الصالح", "محاسن", "عيوبهم", "المساوئ"], ans: "المساوئ" },
         { t: "الخطأ السياقي", q: "من أراد أن يطاع، فليأمر بما لا يستطاع.", opts: ["أراد", "يطاع", "فليأمر", "يستطاع"], ans: "يستطاع" },
         { t: "الخطأ السياقي", q: "نور الشمس يضيء النهار، ونور العلم يطفي القلوب.", opts: ["نور", "يضيء", "يطفي", "القلوب"], ans: "يطفي" },
-        // --- المفردة الشاذة ---
         { t: "المفردة الشاذة", q: "حدد المفردة الشاذة:", opts: ["خروف", "بقرة", "ماعز", "أسد"], ans: "أسد" },
         { t: "المفردة الشاذة", q: "حدد المفردة الشاذة:", opts: ["الكويت", "البحرين", "الأردن", "عمان"], ans: "الأردن" },
         { t: "المفردة الشاذة", q: "حدد المفردة الشاذة:", opts: ["سبت", "أحد", "محرم", "جمعة"], ans: "محرم" },
@@ -112,7 +131,6 @@
         { t: "المفردة الشاذة", q: "حدد المفردة الشاذة:", opts: ["شمال", "شرق", "فوق", "غرب"], ans: "فوق" },
         { t: "المفردة الشاذة", q: "حدد المفردة الشاذة:", opts: ["فقه", "توحيد", "كيمياء", "تفسير"], ans: "كيمياء" },
         { t: "المفردة الشاذة", q: "حدد المفردة الشاذة:", opts: ["سيف", "خنجر", "رمح", "درع"], ans: "درع" },
-        // --- الارتباط والاختلاف ---
         { t: "الارتباط والاختلاف", q: "الارتباط الأقوى لـ (مكّة) هو:", opts: ["جبل", "تجارة", "كعبة", "طريق"], ans: "كعبة" },
         { t: "الارتباط والاختلاف", q: "ما الكلمة التي لا تنتمي لمجموعة (أعضاء النطق):", opts: ["لسان", "أسنان", "حلق", "أذن"], ans: "أذن" },
         { t: "الارتباط والاختلاف", q: "أي من هذه الكلمات يختلف عن البقية:", opts: ["عطارد", "المريخ", "الشمس", "المشتري"], ans: "الشمس" },
@@ -120,17 +138,20 @@
         { t: "الارتباط والاختلاف", q: "الكلمة المرتبطة بـ (بحر) من حيث المهنة:", opts: ["قبطان", "مهندس", "طيار", "مزارع"], ans: "قبطان" }
     ];
 
-    const currentModelId = "نموذج-شامل-40";
+    const currentModelId = "نموذج - 4";
     let sName, sEmail, currentIdx = 0, userScore = 0, timer, finalQuestions, studentAnswers = [];
 
+    // 4. وظيفة التحقق والبدء
     async function verifyAndStart() {
         const email = document.getElementById('studentEmail').value.trim().toLowerCase();
-        if(!email.includes('@')) return alert("يرجى إدخال إيميل صحيح");
+        if(!email.includes('@')) return alert("يرجى إدخال إيميل منصة مدرستي");
         document.getElementById('status-msg').innerText = "جاري التحقق... ⏳";
         try {
             const doc = await db.collection("allowed_students").doc(email).get();
             if(!doc.exists) { alert("الإيميل غير مسجل"); return; }
             sName = doc.data().name; sEmail = email;
+            
+            // ترتيب عشوائي للأسئلة
             finalQuestions = [...rawQuizData].sort(() => Math.random() - 0.5);
             document.getElementById('start-page').classList.add('hidden');
             document.getElementById('quiz-page').classList.remove('hidden');
@@ -138,6 +159,7 @@
         } catch(e) { alert("خطأ في الاتصال"); }
     }
 
+    // 5. وظيفة تحميل السؤال
     function loadQuestion() {
         if(currentIdx >= finalQuestions.length) return finish();
         const data = finalQuestions[currentIdx];
@@ -154,7 +176,7 @@
                 const isCorrect = (o === data.ans);
                 if(isCorrect) userScore++;
                 
-                // حفظ التفاصيل (السؤال، إجابة الطالب، الإجابة الصحيحة)
+                // حفظ تفاصيل الإجابة لإرسالها للوحة القيادة (السؤال، إجابة الطالب، الصحيحة)
                 studentAnswers.push({
                     qText: data.q,
                     studentAns: o,
@@ -186,29 +208,31 @@
 
     function nextQuestion() { currentIdx++; loadQuestion(); }
 
+    // 6. وظيفة إنهاء الاختبار وإرسال البيانات
     async function finish() {
         document.getElementById('quiz-page').classList.add('hidden');
         document.getElementById('result-page').classList.remove('hidden');
-        
-        // حساب مهارات الأقسام للوحة القيادة
+
+        // حساب نسب الأقسام للوحة القيادة
         const sections = { tan:0, ekm:0, syq:0, st:0, mfr:0, art:0, ikh:0 };
         const map = { "تناظر لفظي":"tan", "إكمال الجمل":"ekm", "الخطأ السياقي":"syq", "المفردة الشاذة":"mfr", "الارتباط والاختلاف":"art" };
 
         Object.keys(map).forEach(key => {
-            const qType = studentAnswers.filter(a => a.type === key);
-            if(qType.length > 0) {
-                const correct = qType.filter(a => a.isCorrect).length;
-                sections[map[key]] = Math.round((correct / qType.length) * 100);
+            const qInType = studentAnswers.filter(a => a.type === key);
+            if(qInType.length > 0) {
+                const correct = qInType.filter(a => a.isCorrect).length;
+                sections[map[key]] = Math.round((correct / qInType.length) * 100);
             }
         });
 
+        // إرسال البيانات شاملة مصفوفة studentAnswers لتعمل ميزة المراجعة
         await db.collection("student_results").add({ 
             name: sName, email: sEmail, score: userScore, total: finalQuestions.length, 
             model_id: currentModelId, sections: sections, answers: studentAnswers, 
             time: firebase.firestore.FieldValue.serverTimestamp() 
         });
 
-        document.getElementById('final-greeting').innerText = `بارك الله فيك يا ${sName}`;
+        document.getElementById('final-greeting').innerHTML = `بارك الله فيك يا ${sName} ✨`;
         document.getElementById('score-text').innerText = `${userScore} / ${finalQuestions.length}`;
     }
 </script>
