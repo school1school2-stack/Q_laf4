@@ -14,139 +14,131 @@
             --correct: #27ae60; 
             --wrong: #e74c3c;
             --passage-bg: rgba(0,0,0,0.03);
-            --glow: rgba(0,0,0,0.1);
         }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-color); display: flex; justify-content: center; padding: 20px; margin: 0; user-select: none; transition: all 0.5s ease; }
-        
-        @keyframes pulse-dynamic { 
-            0% { transform: scale(1); box-shadow: 0 4px 10px rgba(0,0,0,0.05); } 
-            50% { transform: scale(1.02); box-shadow: 0 0 15px var(--glow); border-color: var(--main-color); } 
-            100% { transform: scale(1); box-shadow: 0 4px 10px rgba(0,0,0,0.05); } 
-        }
-
-        .quiz-card { background: var(--white); width: 100%; max-width: 900px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-top: 15px solid var(--main-color); padding: 35px; min-height: 400px; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-color); display: flex; justify-content: center; padding: 20px; margin: 0; user-select: none; transition: background 0.5s; }
+        .quiz-card { background: var(--white); width: 100%; max-width: 900px; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.08); border-top: 12px solid var(--main-color); padding: 35px; position: relative; }
         .header { text-align: center; border-bottom: 2px solid #f0f0f0; margin-bottom: 25px; padding-bottom: 15px; }
-        .nav-bar { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 15px 25px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #e2e8f0; }
-        .q-type-badge { background: var(--main-color); color: white; padding: 10px 25px; border-radius: 10px; font-weight: bold; display: inline-block; }
-        .q-text { font-size: 1.7rem; font-weight: bold; text-align: center; line-height: 1.8; color: #1e293b; padding: 20px 10px; min-height: 80px; }
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
-        .opt { padding: 22px; border: 2px solid #e2e8f0; border-radius: 15px; cursor: pointer; text-align: center; font-size: 1.35rem; background: #fff; font-weight: 600; animation: pulse-dynamic 3s infinite ease-in-out; transition: 0.3s; }
-        .correct { background: var(--correct) !important; color: white !important; border-color: var(--correct) !important; animation: none !important; }
-        .wrong { background: var(--wrong) !important; color: white !important; border-color: var(--wrong) !important; animation: none !important; }
-        .btn { background: var(--main-color); color: white; padding: 16px 60px; border: none; border-radius: 12px; cursor: pointer; font-size: 1.2rem; font-weight: bold; }
+        .nav-bar { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.02); padding: 15px 25px; border-radius: 10px; margin-bottom: 25px; border: 1px solid #eee; }
+        
+        .challenger-box { color: var(--main-color); font-weight: bold; }
+        .q-type-badge { background: var(--main-color); color: white; padding: 8px 20px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; }
+        .q-text { font-size: 1.6rem; font-weight: bold; text-align: center; line-height: 1.8; color: #2c3e50; padding: 10px; border-radius: 12px; min-height: 50px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        
+        .reading-passage { background-color: var(--passage-bg); border-right: 6px solid var(--main-color); padding: 20px; margin: 15px 0; border-radius: 8px; text-align: justify; font-size: 1.2rem; line-height: 1.9; color: #333; width: 100%; box-sizing: border-box; display: block; }
+
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 25px; }
+        .opt { padding: 20px; border: 2px solid #ecf0f1; border-radius: 12px; cursor: pointer; text-align: center; font-size: 1.3rem; background: #fff; transition: 0.2s; color: #34495e; font-weight: 600; }
+        .opt:hover { border-color: var(--main-color); background: #f9fbfb; }
+        .correct { background: var(--correct) !important; color: white !important; border-color: var(--correct) !important; }
+        .wrong { background: var(--wrong) !important; color: white !important; border-color: var(--wrong) !important; }
+        .btn { background: var(--main-color); color: white; padding: 15px 55px; border: none; border-radius: 8px; cursor: pointer; font-size: 1.1rem; font-weight: bold; display: inline-block; text-decoration: none; }
         .hidden { display: none !important; }
-        input { width: 85%; padding: 18px; border-radius: 12px; border: 2px solid #e2e8f0; margin-bottom: 20px; text-align: center; font-size: 1.2rem; }
-        @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
+        input { width: 80%; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 15px; text-align: center; font-size: 1.1rem; }
+
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .quiz-card { padding: 20px 15px; border-top-width: 8px; }
+            .options-grid { grid-template-columns: 1fr; gap: 12px; }
+            .btn { width: 100%; box-sizing: border-box; }
+            input { width: 100%; box-sizing: border-box; }
+        }
     </style>
 </head>
 <body>
 
 <div class="quiz-card">
-    <div id="start-page" style="text-align: center;">
+    <div class="header">
         <h3>ثانوية الأمير عبدالمجيد 🎓</h3>
         <h4>أ / عبدالعزيز الفيفي ✨</h4>
-        <p>أدخل إيميل منصة مدرستي لبدء التحدي</p>
+    </div>
+
+    <div id="lock-screen" class="hidden" style="text-align: center; padding: 40px;">
+        <h1 style="font-size: 4rem; margin: 0;">🚫</h1>
+        <h2 style="color: var(--wrong);">تنبيه النظام</h2>
+        <div id="lock-message" style="font-size: 1.3rem; line-height: 1.6; color: #555;"></div>
+        <button class="btn" onclick="location.reload()" style="margin-top: 20px;">العودة</button>
+    </div>
+
+    <div id="start-page" style="text-align: center;">
+        <p style="font-weight: bold; color: var(--main-color);">أدخل إيميل منصة مدرستي لبدء التحدي</p>
         <input type="email" id="studentEmail" placeholder="sxxxxxxx@rb.moe.gov.sa">
         <br>
         <button class="btn" onclick="verifyAndStart()">دخول المنصة 🚀</button>
-        <p id="status-msg" style="margin-top: 20px; font-weight: bold;"></p>
+        <p id="status-msg" style="margin-top: 15px; font-weight: bold;"></p>
     </div>
 
     <div id="quiz-page" class="hidden">
         <div class="nav-bar">
-            <div id="q-counter" style="font-weight: 800;"></div>
-            <div id="timer" style="font-weight: 900; font-size: 1.8rem; color: var(--wrong);">45</div>
+            <div id="q-counter" style="font-weight: bold;"></div>
+            <div id="challenger-display" class="challenger-box"></div> 
+            <div id="timer" style="font-weight: 900; font-size: 1.6rem; color: var(--wrong);">45</div>
         </div>
-        <div style="text-align: right; margin-bottom: 15px;">
+        <div style="text-align: right; margin-bottom: 10px;">
             <span id="q-type-label" class="q-type-badge"></span>
         </div>
         <div id="question-text" class="q-text"></div>
         <div id="options-area" class="options-grid"></div>
-        <div style="text-align: center; margin-top: 40px;">
+        <div style="text-align: center; margin-top: 35px;">
             <button id="next-btn" class="btn hidden" onclick="nextQuestion()">السؤال التالي ⮕</button>
         </div>
     </div>
 
     <div id="result-page" class="hidden" style="text-align: center;">
-        <h2 id="final-greeting" style="line-height: 1.6;"></h2>
-        <div style="font-size: 5rem; font-weight: 900; margin: 30px 0; color: var(--main-color);" id="score-text"></div>
-        <button class="btn" onclick="location.reload()">إنهاء الجلسة</button>
+        <h2 id="final-greeting"></h2>
+        <div style="font-size: 5rem; font-weight: bold; margin: 25px 0; color: var(--main-color);" id="score-text"></div>
+        <button class="btn" onclick="location.reload()">خروج</button>
     </div>
 </div>
 
 <script>
-    // --- [1] مصفوفة الثيمات العشوائية ---
-    const themes = [
-        {main: "#800000", bg: "#fdf1f1", pbg: "rgba(128, 0, 0, 0.05)"},
-        {main: "#2c3e50", bg: "#f4f7f6", pbg: "rgba(44, 62, 80, 0.05)"},
-        {main: "#1e3a8a", bg: "#eff6ff", pbg: "rgba(30, 58, 138, 0.05)"},
-        {main: "#065f46", bg: "#ecfdf5", pbg: "rgba(6, 95, 70, 0.05)"},
-        {main: "#b45309", bg: "#fffbeb", pbg: "rgba(180, 83, 9, 0.05)"},
-        {main: "#6d28d9", bg: "#f5f3ff", pbg: "rgba(109, 40, 217, 0.05)"},
-        {main: "#0369a1", bg: "#f0f9ff", pbg: "rgba(3, 105, 161, 0.05)"},
-        {main: "#be185d", bg: "#fff1f2", pbg: "rgba(190, 24, 93, 0.05)"},
-        {main: "#15803d", bg: "#f0fdf4", pbg: "rgba(21, 128, 61, 0.05)"},
-        {main: "#4338ca", bg: "#eef2ff", pbg: "rgba(67, 56, 202, 0.05)"},
-        {main: "#334155", bg: "#f8fafc", pbg: "rgba(51, 65, 85, 0.05)"},
-        {main: "#7c2d12", bg: "#fff7ed", pbg: "rgba(124, 45, 18, 0.05)"},
-        {main: "#1e1b4b", bg: "#fdfdfd", pbg: "rgba(30, 27, 75, 0.03)"}
-    ];
-
-    function applyTheme() {
-        const t = themes[Math.floor(Math.random() * themes.length)];
-        const r = document.documentElement;
-        r.style.setProperty('--main-color', t.main);
-        r.style.setProperty('--bg-color', t.bg);
-        r.style.setProperty('--passage-bg', t.pbg);
-        r.style.setProperty('--glow', t.main + "40");
-    }
-    applyTheme();
-
-    // --- [2] مصفوفة الـ 40 سؤالاً المحقونة ---
+    // --- بيانات الأسئلة (كما هي في ملفك الأصلي) ---
     const rawQuizData = [
-        { t: "التناظر اللفظي", q: "غرفة : فندق", opts: ["غصن : شجرة", "شارع : مدينة", "وجه : أنف", "بحر : سمك"], ans: "غصن : شجرة" },
-        { t: "التناظر اللفظي", q: "رمل : زجاج", opts: ["خشب : ورق", "حديد : مغناطيس", "ماء : ثلج", "نار : دخان"], ans: "خشب : ورق" },
-        { t: "التناظر اللفظي", q: "دقيقة : ساعة", opts: ["يوم : أسبوع", "ثانية : دقيقة", "شهر : سنة", "قرن : عام"], ans: "ثانية : دقيقة" },
-        { t: "التناظر اللفظي", q: "منحل : عسل", opts: ["مزرعة : ثمار", "حقل : قمح", "فرن : خبز", "بحر : لؤلؤ"], ans: "فرن : خبز" },
-        { t: "التناظر اللفظي", q: "مهندس : خريطة", opts: ["طبيب : مستشفى", "محام : قضية", "خياط : قماش", "رسام : لوحة"], ans: "رسام : لوحة" },
-        { t: "التناظر اللفظي", q: "عجين : خبز", opts: ["ماء : ثلج", "نواة : تمر", "خشب : كرسي", "بذرة : شجرة"], ans: "خشب : كرسي" },
-        { t: "التناظر اللفظي", q: "منار : إرشاد", opts: ["مفتاح : غلق", "ساعة : وقت", "بوصلة : اتجاه", "قلم : كتابة"], ans: "بوصلة : اتجاه" },
-        { t: "التناظر اللفظي", q: "اجتهاد : نجاح", opts: ["ركض : تعب", "ألم : مرض", "نوم : ليل", "سفر : حقيبة"], ans: "ركض : تعب" },
-        { t: "التناظر اللفظي", q: "غزال : رشاقة", opts: ["أسد : قوة", "ثعلب : مكر", "جمل : صبر", "نملة : نظام"], ans: "ثعلب : مكر" },
-        { t: "التناظر اللفظي", q: "مشرط : جراح", opts: ["قلم : كاتب", "منشار : خشب", "طائرة : طيار", "مقص : قماش"], ans: "قلم : كاتب" },
-        { t: "إكمال الجمل", q: "المتوكل هو الذي ...... بالأسباب و...... على رب الأرباب.", opts: ["يأخذ - يتوكل", "يترك - يعتمد", "ينسى - يرضى", "يهمل - يثق"], ans: "يأخذ - يتوكل" },
-        { t: "إكمال الجمل", q: "من وعظ أخاه ...... فقد زانه، ومن وعظه ...... فقد شانه.", opts: ["سراً - علانية", "جهراً - سراً", "دائماً - يوماً", "بأدب - بغلظة"], ans: "سراً - علانية" },
-        { t: "إكمال الجمل", q: "إذا كنت تحب الصعود فلا بد أن ...... عن ذرات ...... .", opts: ["تتخلى - الغرور", "تبحث - النجاح", "تدافع - الكرامة", "تتحدث - الفخر"], ans: "تتخلى - الغرور" },
-        { t: "إكمال الجمل", q: "الكلمة الطيبة ...... للأبواب المغلقة، و...... للقلوب القاسية.", opts: ["مفتاح - بلسم", "قفل - وجع", "طريق - جدار", "حل - ألم"], ans: "مفتاح - بلسم" },
-        { t: "إكمال الجمل", q: "الكتب هي ...... التي نطل من خلالها على ...... الآخرين.", opts: ["النوافذ - عقول", "الأبواب - بيوت", "المرآة - وجوه", "المصابيح - طرق"], ans: "النوافذ - عقول" },
-        { t: "إكمال الجمل", q: "إذا أردت أن تعلو فوق الناس فضع نفسك ...... ، وإذا أردت أن تقودهم فسر ...... .", opts: ["أسفل منهم - خلفهم", "أمامهم - بجانبهم", "خلفهم - معهم", "فوقهم - أمامهم"], ans: "أسفل منهم - خلفهم" },
-        { t: "إكمال الجمل", q: "عظمة عقلك تخلق لك ...... ، وعظمة قلبك تخلق لك ...... .", opts: ["الحساد - المحبين", "المجد - الحب", "الشهرة - المودة", "الأعداء - الأصدقاء"], ans: "الحساد - المحبين" },
-        { t: "إكمال الجمل", q: "من ...... في عمله ساد، ومن ...... في قوله قاد.", opts: ["أخلص - صدق", "أسرع - أجمل", "تعب - أطال", "اجتهد - أكثر"], ans: "أخلص - صدق" },
-        { t: "إكمال الجمل", q: "الاعتذار لا يعني دائماً أنك على ...... ، بل يعني أنك تقدّر ...... أكثر من ذاتك.", opts: ["خطأ - علاقتك", "حق - كرامتك", "يقين - نفسك", "باطل - قيمتك"], ans: "خطأ - علاقتك" },
-        { t: "إكمال الجمل", q: "قطرة الماء ...... الصخر، ليس بالعنف ولكن بـ ...... .", opts: ["تفتت - التكرار", "تكسر - القوة", "تذيب - الحرارة", "تثقب - الصمود"], ans: "تفتت - التكرار" },
-        { t: "الخطأ السياقي", q: "من لانت كلمته وجبت محبته، فالكلمة الفظة تفتح القلوب القاسية.", opts: ["لانت", "محبته", "الفظة", "تفتح"], ans: "تفتح" },
-        { t: "الخطأ السياقي", q: "المرء الناجح هو من يغلق أذنيه عن النجاح، ويستمر في العمل الدؤوب.", opts: ["الناجح", "يغلق", "النجاح", "الدؤوب"], ans: "النجاح" },
-        { t: "الخطأ السياقي", q: "الكتب هي خزائن العلم، فاحرص على إهمالها لتنال المعرفة الواسعة.", opts: ["خزائن", "احرص", "إهمالها", "المعرفة"], ans: "إهمالها" },
-        { t: "الخطأ السياقي", q: "أفضل وسيلة للتغلب على الصعوبات هي الهروب منها، فالمواجهة تضعف العزيمة.", opts: ["أفضل", "الهروب", "المواجهة", "تضعف"], ans: "الهروب" },
-        { t: "الخطأ السياقي", q: "إن طول التجارب في الحياة يعلمك كثرة الكلام، ويمنحك قدرة على الحكمة.", opts: ["طول", "يعلمك", "الكلام", "الحكمة"], ans: "الكلام" },
-        { t: "الخطأ السياقي", q: "الرجل الصالح هو من يرى محاسن الناس ويخفي عيوبهم، ويذكر المساوئ في غيبتهم.", opts: ["الصالح", "محاسن", "عيوبهم", "المساوئ"], ans: "المساوئ" },
-        { t: "الخطأ السياقي", q: "من أراد أن يطاع، فليأمر بما لا يستطاع.", opts: ["أراد", "يطاع", "فليأمر", "يستطاع"], ans: "يستطاع" },
-        { t: "الخطأ السياقي", q: "نور الشمس يضيء النهار، ونور العلم يطفي القلوب.", opts: ["نور", "يضيء", "يطفي", "القلوب"], ans: "يطفي" },
-        { t: "المفردة الشاذة", q: "حدد المفردة الشاذة:", opts: ["خروف", "بقرة", "ماعز", "أسد"], ans: "أسد" },
-        { t: "المفردة الشاذة", q: "حدد المفردة الشاذة:", opts: ["الكويت", "البحرين", "الأردن", "عمان"], ans: "الأردن" },
-        { t: "المفردة الشاذة", q: "حدد المفردة الشاذة:", opts: ["سبت", "أحد", "محرم", "جمعة"], ans: "محرم" },
-        { t: "المفردة الشاذة", q: "حدد المفردة الشاذة:", opts: ["متر", "جرام", "كيلو", "طن"], ans: "متر" },
-        { t: "المفردة الشاذة", q: "حدد المفردة الشاذة:", opts: ["شمال", "شرق", "فوق", "غرب"], ans: "فوق" },
-        { t: "المفردة الشاذة", q: "حدد المفردة الشاذة:", opts: ["فقه", "توحيد", "كيمياء", "تفسير"], ans: "كيمياء" },
-        { t: "المفردة الشاذة", q: "حدد المفردة الشاذة:", opts: ["سيف", "خنجر", "رمح", "درع"], ans: "درع" },
-        { t: "الارتباط والاختلاف", q: "الارتباط الأقوى لـ (مكّة) هو:", opts: ["جبل", "تجارة", "كعبة", "طريق"], ans: "كعبة" },
-        { t: "الارتباط والاختلاف", q: "ما الكلمة التي لا تنتمي لمجموعة (أعضاء النطق):", opts: ["لسان", "أسنان", "حلق", "أذن"], ans: "أذن" },
+        { t: "تناظر لفظي", q: "غصن : شجرة", opts: ["نصل : سيف", "بحر : سمك", "غابة : أشجار", "بيت : سور"], ans: "نصل : سيف" },
+        { t: "تناظر لفظي", q: "منحل : عسل", opts: ["مزرعة : ثمار", "حقل : قمح", "فرن : خبز", "بحر : لؤلؤ"], ans: "فرن : خبز" },
+        { t: "تناظر لفظي", q: "مهندس : خريطة", opts: ["طبيب : مستشفى", "محام : قضية", "خياط : قماش", "رسام : لوحة"], ans: "رسام : لوحة" },
+        { t: "تناظر لفظي", q: "عجين : خبز", opts: ["ماء : ثلج", "نواة : تمر", "خشب : كرسي", "بذرة : شجرة"], ans: "خشب : كرسي" },
+        { t: "تناظر لفظي", q: "منار : إرشاد", opts: ["مفتاح : غلق", "ساعة : وقت", "بوصلة : اتجاه", "قلم : كتابة"], ans: "بوصلة : اتجاه" },
+        { t: "تناظر لفظي", q: "اجتهاد : نجاح", opts: ["ركض : تعب", "ألم : مرض", "نوم : ليل", "سفر : حقيبة"], ans: "ركض : تعب" },
+        { t: "تناظر لفظي", q: "غزال : رشاقة", opts: ["أسد : قوة", "ثعلب : مكر", "جمل : صبر", "نملة : نظام"], ans: "ثعلب : مكر" },
+        { t: "تناظر لفظي", q: "منزل : مأوى", opts: ["سيارة : وسيلة", "ثوب : ستر", "نور : ضياء", "علم : نور"], ans: "ثوب : ستر" },
+        { t: "تناظر لفظي", q: "رأس : عين", opts: ["يد : إصبع", "قدم : حذاء", "وجه : أنف", "غرفة : نافذة"], ans: "يد : إصبع" },
+        { t: "مشرط : جراح", q: "مشرط : جراح", opts: ["قلم : كاتب", "منشار : خشب", "طائرة : طيار", "مقص : قماش"], ans: "قلم : كاتب" },
+        { t: "إكمال الجمل", q: "إذا أردت أن تعلو فوق الناس فضع نفسك ...... ، وإذا أردت أن تقودهم فسر ...... .", opts: ["خلفهم - معهم", "أسفل منهم - خلفهم", "أمامهم - بجانبهم", "فوقهم - أمامهم"], ans: "أسفل منهم - خلفهم" },
+        { t: "إكمال الجمل", q: "عظمة عقلك تخلق لك ...... ، وعظمة قلبك تخلق لك ...... .", opts: ["المجد - الحب", "الشهرة - المودة", "الحساد - المحبين", "الأعداء - الأصدقاء"], ans: "الحساد - المحبين" },
+        { t: "إكمال الجمل", q: "من ...... في عمله ساد، ومن ...... في قوله قاد.", opts: ["أسرع - أجمل", "أخلص - صدق", "تعب - أطال", "اجتهد - أكثر"], ans: "أخلص - صدق" },
+        { t: "إكمال الجمل", q: "الاعتذار لا يعني دائماً أنك على ...... ، بل يعني أنك تقدّر ...... أكثر من ذاتك.", opts: ["حق - كرامتك", "يقين - نفسك", "خطأ - علاقتك", "باطل - قيمتك"], ans: "خطأ - علاقتك" },
+        { t: "إكمال الجمل", q: "قطرة الماء ...... الصخر، ليس بالعنف ولكن بـ ...... .", opts: ["تكسر - القوة", "تفتت - التكرار", "تذيب - الحرارة", "تثقب - الصمود"], ans: "تفتت - التكرار" },
+        { t: "إكمال الجمل", q: "لا تصاحب ...... فإنه يزين لك فعله، ويود أن تكون ...... .", opts: ["الكاذب - صادقاً", "البخيل - كريماً", "الظالم - تابعاً", "الفاشل - مثله"], ans: "الفاشل - مثله" },
+        { t: "إكمال الجمل", q: "الكتب هي ...... التي نطل من خلالها على ...... الآخرين.", opts: ["الأبواب - بيوت", "النوافذ - عقول", "المرآة - وجوه", "المصابيح - طرق"], ans: "النوافذ - عقول" },
+        { t: "استيعاب المقروء", q: "<div class='reading-passage'>تعتبر تقنية النانو من أدق العلوم الحديثة، حيث تتعامل مع المادة بمقاييس ذرية وجزيئية متناهية الصغر. تهدف هذه التقنية إلى ابتكار مواد وأجهزة جديدة لها خصائص فريدة، مما يفتح آفاقاً واسعة في مجالات الطب، والصناعة، وتوليد الطاقة النظيفة.</div> الخاصية الأساسية لتقنية النانو هي التعامل مع المادة في مستوى:", opts: ["الأحجام الكبيرة", "الذرات والجزيئات", "المصانع الكبرى", "العناصر الطبيعية"], ans: "الذرات والجزيئات" },
+        { t: "استيعاب المقروء", q: "<div class='reading-passage'>القراءة الإلكترونية أصبحت منافساً قوياً للكتاب الورقي بفضل سهولة الحمل والوصول السريع لآلاف العناوين. ورغم ذلك، يرى الكثيرون أن للكتاب الورقي سحراً خاصاً وراحة للعين لا توفرها الشاشات، مما يجعل العلاقة بينهما علاقة تكامل لا إلغاء.</div> العلاقة بين الكتاب الورقي والإلكتروني حسب النص هي:", opts: ["علاقة صراع", "علاقة تكامل", "نهاية الورقي", "فشل الإلكتروني"], ans: "علاقة تكامل" },
+        { t: "استيعاب المقروء", q: "<div class='reading-passage'>تعد التنمية المستدامة نهجاً يهدف إلى تلبية احتياجات الحاضر دون المساس بقدرة الأجيال القادمة على تلبية احتياجاتها. يركز هذا النهج على الموازنة بين النمو الاقتصادي، وحماية البيئة، والعدالة الاجتماعية لضمان حياة كريمة للجميع في المستقبل.</div> الهدف الأساسي للتنمية المستدامة هو الموازنة بين:", opts: ["الربح والبيع", "الماضي والحاضر", "احتياجات الحاضر والمستقبل", "الصناعة والتجارة"], ans: "احتياجات الحاضر والمستقبل" },
+        { t: "استيعاب المقروء", q: "<div class='reading-passage'>الاستثمار في العقول هو أرقى أنواع الاستثمار، فالدول التي اهتمت بالتعليم والبحث العلمي استطاعت أن تقود العالم تقنياً واقتصادياً. فالإنسان المبدع هو الثروة الحقيقية التي لا تنضب، وهي التي تحول الموارد الخام إلى منتجات ذات قيمة عالية.</div> الثروة الحقيقية للدول كما ورد في النص هي:", opts: ["النفط والمعادن", "المساحات الشاسعة", "الإنسان المبدع", "الأموال الطائلة"], ans: "الإنسان المبدع" },
+        { t: "استيعاب المقروء", q: "<div class='reading-passage'>تعتبر لغة الجسد وسيلة تواصل غير لفظية تنقل المشاعر والأفكار عبر الحركات والإيماءات. تشير الدراسات إلى أن أكثر من نصف رسائلنا التواصلية تصل للآخرين عبر الجسد وليس الكلمات، مما يجعل فهم هذه اللغة مهارة أساسية للنجاح الاجتماعي.</div> نسبة التواصل عبر لغة الجسد مقارنة بالكلمات تعتبر:", opts: ["متساوية تماماً", "أقل أهمية", "أكثر تأثيراً ونسبة", "غير مؤثرة"], ans: "أكثر تأثيراً ونسبة" },
+        { t: "استيعاب المقروء", q: "<div class='reading-passage'>إن إدارة الوقت لا تعني العمل لساعات أطول، بل تعني العمل بذكاء أكبر. ترتيب الأولويات وتفويض المهام غير الضرورية يساهم في تقليل التوتر وزيادة الإنتاجية، مما يمنح الفرد توازناً أفضل بين حياته المهنية وحياته الخاصة.</div> المفهوم الصحيح لإدارة الوقت هو:", opts: ["زيادة ساعات العمل", "العمل بذكاء وترتيب الأولويات", "إلغاء أوقات الراحة", "تنفيذ كل المهام شخصياً"], ans: "العمل بذكاء وترتيب الأولويات" },
+        { t: "المفردة الشاذة", q: "حدد المفردة الشاذة:", opts: ["جاكرتا", "أستراليا", "كوالالمبور", "بكين"], ans: "أستراليا" },
+        { t: "المفردة الشاذة", q: "حدد المفردة الشاذة:", opts: ["توحيد", "فقه", "كيمياء", "تفسير"], ans: "كيمياء" },
+        { t: "المفردة الشاذة", q: "حدد المفردة الشاذة:", opts: ["مدرسة", "مستشفى", "طالب", "مكتبة"], ans: "طالب" },
+        { t: "المفردة الشاذة", q: "حدد المفردة الشاذة:", opts: ["بلاستيك", "حديد", "خشب", "قماش"], ans: "حديد" },
+        { t: "المفردة الشاذة", q: "حدد المفردة الشاذة:", opts: ["ضحك", "قهقهة", "بكاء", "ابتسامة"], ans: "بكاء" },
+        { t: "المفردة الشاذة", q: "حدد المفردة الشاذة:", opts: ["خنجر", "درع", "سيف", "رمح"], ans: "درع" },
+        { t: "الخطأ السياقي", q: "إن طول التجارب في الحياة يعلمك كثرة الكلام، ويمنحك قدرة على الحكمة.", opts: ["قدرة", "يعلمك", "طول", "الكلام"], ans: "الكلام" },
+        { t: "الخطأ السياقي", q: "الرجل الصالح هو من يرى محاسن الناس ويخفي عيوبهم، ويذكر المساوئ في غيبتهم.", opts: ["محاسن", "المساوئ", "عيوبهم", "الصالح"], ans: "المساوئ" },
+        { t: "الخطأ السياقي", q: "عليك بمصاحبة الأخيار، فإنهم إن لم ينفعوك في الدنيا، لم يضروك في الآخرة.", opts: ["يضروك", "ينفعوك", "الأخيار", "الآخرة"], ans: "يضروك" },
+        { t: "الخطأ السياقي", q: "النجاح هو الشيء الوحيد الذي يستطيع الإنسان أن يحققه دون بذل أي جهد.", opts: ["يحققه", "النجاح", "الوحيد", "جهد"], ans: "النجاح" },
+        { t: "الخطأ السياقي", q: "من أراد أن يطاع، فليأمر بما لا يستطاع.", opts: ["يطاع", "فليأمر", "يستطاع", "أراد"], ans: "يستطاع" },
+        { t: "الخطأ السياقي", q: "نور الشمس يضيء النهار، ونور العلم يطفي القلوب.", opts: ["يطفي", "نور", "يضيء", "القلوب"], ans: "يطفي" },
+        { t: "الارتباط والاختلاف", q: "الارتباط الأقوى لـ (مكّة) هو:", opts: ["جبل", "كعبة", "تجارة", "طريق"], ans: "كعبة" },
+        { t: "الارتباط والاختلاف", q: "ما الكلمة التي لا تنتمي لمجموعة (أعضاء النطق):", opts: ["لسان", "أسنان", "أذن", "حلق"], ans: "أذن" },
         { t: "الارتباط والاختلاف", q: "أي من هذه الكلمات يختلف عن البقية:", opts: ["عطارد", "المريخ", "الشمس", "المشتري"], ans: "الشمس" },
-        { t: "الارتباط والاختلاف", q: "الارتباط الأقوى لـ (غابة) هو:", opts: ["خشب", "أشجار", "حيوانات", "ماء"], ans: "أشجار" },
-        { t: "الارتباط والاختلاف", q: "الكلمة المرتبطة بـ (بحر) من حيث المهنة:", opts: ["قبطان", "مهندس", "طيار", "مزارع"], ans: "قبطان" }
+        { t: "الارتباط والاختلاف", q: "الارتباط الأقوى لـ (غابة) هو:", opts: ["خشب", "حيوانات", "ماء", "أشجار"], ans: "أشجار" },
+        { t: "الارتباط والاختلاف", q: "الكلمة المرتبطة بـ (بحر) من حيث المهنة:", opts: ["مهندس", "قبطان", "طيار", "مزارع"], ans: "قبطان" }
     ];
 
-    // إعدادات Firebase
+    const currentModelId = " نموذج - 4 ";
+    let sName, sEmail, currentIdx = 0, userScore = 0, timer, finalQuestions;
+    let userAnswers = []; // تخزين مراجعة الإجابات
+
     const firebaseConfig = { 
         apiKey: "AIzaSyBkCO7FDQXd89YDf843J4_AtvEFvzzt-R0", 
         authDomain: "aztlg-494c3.firebaseapp.com", 
@@ -158,59 +150,80 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    const currentModelId = "النموذج الشامل - 1"; // تم تغيير المعرف لضمان عدم منع المختبرين سابقاً
-    let sName, sEmail, currentIdx = 0, userScore = 0, timer, finalQuestions;
-    let userAnswers = [];
-
     async function verifyAndStart() {
-        const email = document.getElementById('studentEmail').value.trim().toLowerCase();
-        if(!email.includes('@')) return alert("يرجى إدخال إيميل منصة مدرستي");
+        const emailInput = document.getElementById('studentEmail').value.trim().toLowerCase();
+        if(!emailInput.includes('@')) return alert("يرجى إدخال إيميل منصة مدرستي");
         document.getElementById('status-msg').innerText = "جاري التحقق... ⏳";
 
         try {
-            const allowed = await db.collection("allowed_students").doc(email).get();
-            if (!allowed.exists) return alert("الإيميل غير مسجل");
+            const allowedDoc = await db.collection("allowed_students").doc(emailInput).get();
+            if (!allowedDoc.exists) {
+                showLock("هذا الإيميل غير مسجل. يرجى مراجعة المعلم.");
+                return;
+            }
 
-            sName = allowed.data().name;
-            sEmail = email;
+            sName = allowedDoc.data().name;
+            sEmail = emailInput;
 
-            const check = await db.collection("student_results")
+            const resultCheck = await db.collection("student_results")
                 .where("email", "==", sEmail)
                 .where("model_id", "==", currentModelId).get();
 
-            if (!check.empty) return alert(`يا ${sName}، لقد أديت هذا الاختبار مسبقاً.`);
+            if (!resultCheck.empty) {
+                const nextLink = "http://aztlaztl1512-bit.github.io/MAHME-/"; 
+                showLock(`عذراً، لقد سبق لك خوض هذا الاختبار. جرب تحدياً آخر واستمر في التألق!`, nextLink);
+                return;
+            }
 
+            document.getElementById('challenger-display').innerText = `المتحدي: ${sName}`;
             finalQuestions = [...rawQuizData].sort(() => Math.random() - 0.5);
             document.getElementById('start-page').classList.add('hidden');
             document.getElementById('quiz-page').classList.remove('hidden');
             loadQuestion();
-        } catch (e) { alert("فشل الاتصال."); }
+        } catch (e) { alert("خطأ في الاتصال بالسيرفر."); }
+    }
+
+    function showLock(msg, link = "") {
+        document.getElementById('start-page').classList.add('hidden');
+        document.getElementById('lock-screen').classList.remove('hidden');
+        let content = `<p>${msg}</p>`;
+        if (link) {
+            content += `<div style="margin-top:20px;">
+                            <p style="font-size:1rem; color:#888;">يمكنك تجربة هذا الرابط:</p>
+                            <a href="${link}" class="btn" style="background:#27ae60; padding:10px 30px;">اضغط هنا للانتقال ⮕</a>
+                        </div>`;
+        }
+        document.getElementById('lock-message').innerHTML = content;
     }
 
     function loadQuestion() {
         if(currentIdx >= finalQuestions.length) return finish();
-        
         const data = finalQuestions[currentIdx];
-        document.getElementById('q-counter').innerText = `سؤال ${currentIdx+1} / ${finalQuestions.length}`;
+        
+        document.getElementById('q-counter').innerText = `سؤال ${currentIdx+1} من ${finalQuestions.length}`;
         document.getElementById('q-type-label').innerText = data.t;
         document.getElementById('question-text').innerHTML = data.q;
+        document.getElementById('next-btn').classList.add('hidden');
         
-        const box = document.getElementById('options-area'); 
-        box.innerHTML = '';
-        
+        const box = document.getElementById('options-area'); box.innerHTML = '';
         [...data.opts].sort(() => Math.random() - 0.5).forEach(o => {
-            const d = document.createElement('div'); 
-            d.className = 'opt'; 
-            d.innerText = o;
+            const d = document.createElement('div'); d.className = 'opt'; d.innerText = o;
             d.onclick = () => {
                 clearInterval(timer);
                 const isCorrect = (o === data.ans);
                 if(isCorrect) userScore++;
-                
-                userAnswers.push({ qType: data.t, studentAns: o, correctAns: data.ans, isCorrect: isCorrect });
+
+                // حفظ تفاصيل الإجابة للمراجعة
+                userAnswers.push({
+                    qText: data.q,
+                    qType: data.t,
+                    studentAns: o,
+                    correctAns: data.ans,
+                    isCorrect: isCorrect
+                });
 
                 document.querySelectorAll('.opt').forEach(el => {
-                    el.onclick = null; el.style.animation = "none";
+                    el.onclick = null;
                     if(el.innerText === data.ans) el.classList.add('correct');
                     else if(el.innerText === o) el.classList.add('wrong');
                 });
@@ -226,25 +239,37 @@
         clearInterval(timer);
         timer = setInterval(() => {
             s--; document.getElementById('timer').innerText = s;
-            if(s<=0) { clearInterval(timer); nextQuestion(); }
+            if(s<=0) { 
+                clearInterval(timer); 
+                // تسجيل الإجابة كـ "فائتة" عند انتهاء الوقت
+                userAnswers.push({
+                    qText: finalQuestions[currentIdx].q,
+                    qType: finalQuestions[currentIdx].t,
+                    studentAns: "انتهى الوقت",
+                    correctAns: finalQuestions[currentIdx].ans,
+                    isCorrect: false
+                });
+                nextQuestion(); 
+            }
         }, 1000);
     }
 
-    function nextQuestion() { 
-        currentIdx++; 
-        document.getElementById('next-btn').classList.add('hidden');
-        loadQuestion(); 
-    }
+    function nextQuestion() { currentIdx++; loadQuestion(); }
 
     async function finish() {
         document.getElementById('quiz-page').classList.add('hidden');
         document.getElementById('result-page').classList.remove('hidden');
-        document.getElementById('final-greeting').innerHTML = `جهدك اليوم محل تقدير يا <b>(${sName})</b> 💐💐<br>ستصل لمستوى أعلى في المرة المقبلة بإذن الله.`;
+        document.getElementById('final-greeting').innerHTML = `جهدك اليوم محل تقدير، وبإصرار وعزيمة ستصل لمستوى أعلى في المرة المقبلة <br> يا (${sName}) 💐💐`;
         document.getElementById('score-text').innerText = `${userScore} / ${finalQuestions.length}`;
         
+        // إرسال البيانات النهائية متضمنة مصفوفة الإجابات التفصيلية
         await db.collection("student_results").add({ 
-            name: sName, email: sEmail, score: userScore, total: finalQuestions.length, 
-            model_id: currentModelId, answers: userAnswers,
+            name: sName, 
+            email: sEmail, 
+            score: userScore, 
+            total: finalQuestions.length, 
+            model_id: currentModelId, 
+            answers: userAnswers, 
             time: firebase.firestore.FieldValue.serverTimestamp() 
         });
     }
