@@ -153,10 +153,11 @@
                             .where("email", "==", sEmail)
                             .where("model_id", "==", currentModelId).get();
             
-            if(!check.empty) {
-                document.getElementById('start-page').classList.add('hidden');
-                document.getElementById('lock-screen').classList.remove('hidden');
-                document.getElementById('lock-message').innerText = `يا ${sName}، لقد سبق لك خوض هذا التحدي بنجاح. لا يسمح بالتكرار لضمان دقة النتائج.`;
+    async function finish() {
+        document.getElementById('quiz-page').classList.add('hidden');
+        document.getElementById('result-page').classList.remove('hidden');
+        document.getElementById('final-greeting').innerHTML = `جهدك اليوم محل تقدير، وبإصرار وعزيمة ستصل لمستوى أعلى في المرة المقبلة <br> يا (${sName}) 💐💐`;
+        document.getElementById('score-text').innerText = `${userScore} / ${finalQuestions.length}`;
                 return;
             }
 
