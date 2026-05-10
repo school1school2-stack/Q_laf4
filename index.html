@@ -7,14 +7,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <style>
-        :root { 
-            --main-color: #2c3e50; 
-            --bg-color: #f4f7f6; 
-            --white: #ffffff; 
-            --correct: #27ae60; 
-            --wrong: #e74c3c;
-            --passage-bg: rgba(0,0,0,0.03);
-        }
+        :root { --main-color: #2c3e50; --bg-color: #f4f7f6; --white: #ffffff; --correct: #27ae60; --wrong: #e74c3c; --passage-bg: rgba(0,0,0,0.03); }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-color); display: flex; justify-content: center; padding: 20px; margin: 0; user-select: none; transition: background 0.5s; }
         .quiz-card { background: var(--white); width: 100%; max-width: 900px; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.08); border-top: 12px solid var(--main-color); padding: 35px; }
         .header { text-align: center; border-bottom: 2px solid #f0f0f0; margin-bottom: 25px; padding-bottom: 15px; }
@@ -38,6 +31,13 @@
     <div class="header">
         <h3>ثانوية الأمير عبدالمجيد 🎓</h3>
         <h4>أ / عبدالعزيز الفيفي ✨</h4>
+    </div>
+
+    <div id="lock-screen" class="hidden" style="text-align: center; padding: 40px;">
+        <h1 style="font-size: 4rem; margin: 0;">🚫</h1>
+        <h2 style="color: var(--wrong);">عذراً.. لا يمكنك الدخول</h2>
+        <div id="lock-message" style="font-size: 1.3rem; line-height: 1.6; color: #555; margin-bottom: 25px;"></div>
+        <a href="https://aztlaztl1512-bit.github.io/MAHME-/" class="btn">انتقل لتحدي آخر ⮕</a>
     </div>
 
     <div id="start-page" style="text-align: center;">
@@ -68,7 +68,6 @@
 </div>
 
 <script>
-    // 1. إعدادات Firebase
     const firebaseConfig = { 
         apiKey: "AIzaSyBkCO7FDQXd89YDf843J4_AtvEFvzzt-R0", 
         authDomain: "aztlg-494c3.firebaseapp.com", 
@@ -80,7 +79,6 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // 2. مصفوفة الثيمات العشوائية
     const themes = [
         {main: "#800000", bg: "#fdf1f1", pbg: "rgba(128, 0, 0, 0.05)"},
         {main: "#2c3e50", bg: "#f4f7f6", pbg: "rgba(44, 62, 80, 0.05)"},
@@ -92,9 +90,7 @@
     const theme = themes[Math.floor(Math.random() * themes.length)];
     document.documentElement.style.setProperty('--main-color', theme.main);
     document.documentElement.style.setProperty('--bg-color', theme.bg);
-    document.documentElement.style.setProperty('--passage-bg', theme.pbg);
 
-    // 3. مصفوفة الأسئلة (40 سؤالاً)
     const rawQuizData = [
         { t: "تناظر لفظي", q: "غرفة : فندق", opts: ["غصن : شجرة", "شارع : مدينة", "وجه : أنف", "بحر : سمك"], ans: "غصن : شجرة" },
         { t: "تناظر لفظي", q: "رمل : زجاج", opts: ["خشب : ورق", "حديد : مغناطيس", "ماء : ثلج", "نار : دخان"], ans: "خشب : ورق" },
@@ -138,28 +134,39 @@
         { t: "الارتباط والاختلاف", q: "الكلمة المرتبطة بـ (بحر) من حيث المهنة:", opts: ["قبطان", "مهندس", "طيار", "مزارع"], ans: "قبطان" }
     ];
 
-    const currentModelId = "نموذج - 4";
+    const currentModelId = "نموذج-شامل-40";
     let sName, sEmail, currentIdx = 0, userScore = 0, timer, finalQuestions, studentAnswers = [];
 
-    // 4. وظيفة التحقق والبدء
     async function verifyAndStart() {
         const email = document.getElementById('studentEmail').value.trim().toLowerCase();
         if(!email.includes('@')) return alert("يرجى إدخال إيميل منصة مدرستي");
         document.getElementById('status-msg').innerText = "جاري التحقق... ⏳";
+        
         try {
+            // 1. التحقق من وجود الطالب في القائمة
             const doc = await db.collection("allowed_students").doc(email).get();
-            if(!doc.exists) { alert("الإيميل غير مسجل"); return; }
+            if(!doc.exists) { alert("هذا الإيميل غير مسجل لدينا."); return; }
             sName = doc.data().name; sEmail = email;
+
+            // 2. ميزة الإغلاق: التحقق إذا كان الطالب قد أدى هذا النموذج مسبقاً
+            const check = await db.collection("student_results")
+                            .where("email", "==", sEmail)
+                            .where("model_id", "==", currentModelId).get();
             
-            // ترتيب عشوائي للأسئلة
+            if(!check.empty) {
+                document.getElementById('start-page').classList.add('hidden');
+                document.getElementById('lock-screen').classList.remove('hidden');
+                document.getElementById('lock-message').innerText = `يا ${sName}، لقد سبق لك خوض هذا التحدي بنجاح. لا يسمح بالتكرار لضمان دقة النتائج.`;
+                return;
+            }
+
             finalQuestions = [...rawQuizData].sort(() => Math.random() - 0.5);
             document.getElementById('start-page').classList.add('hidden');
             document.getElementById('quiz-page').classList.remove('hidden');
             loadQuestion();
-        } catch(e) { alert("خطأ في الاتصال"); }
+        } catch(e) { alert("عذراً، فشل الاتصال بقاعدة البيانات."); }
     }
 
-    // 5. وظيفة تحميل السؤال
     function loadQuestion() {
         if(currentIdx >= finalQuestions.length) return finish();
         const data = finalQuestions[currentIdx];
@@ -176,7 +183,6 @@
                 const isCorrect = (o === data.ans);
                 if(isCorrect) userScore++;
                 
-                // حفظ تفاصيل الإجابة لإرسالها للوحة القيادة (السؤال، إجابة الطالب، الصحيحة)
                 studentAnswers.push({
                     qText: data.q,
                     studentAns: o,
@@ -208,12 +214,10 @@
 
     function nextQuestion() { currentIdx++; loadQuestion(); }
 
-    // 6. وظيفة إنهاء الاختبار وإرسال البيانات
     async function finish() {
         document.getElementById('quiz-page').classList.add('hidden');
         document.getElementById('result-page').classList.remove('hidden');
 
-        // حساب نسب الأقسام للوحة القيادة
         const sections = { tan:0, ekm:0, syq:0, st:0, mfr:0, art:0, ikh:0 };
         const map = { "تناظر لفظي":"tan", "إكمال الجمل":"ekm", "الخطأ السياقي":"syq", "المفردة الشاذة":"mfr", "الارتباط والاختلاف":"art" };
 
@@ -225,7 +229,6 @@
             }
         });
 
-        // إرسال البيانات شاملة مصفوفة studentAnswers لتعمل ميزة المراجعة
         await db.collection("student_results").add({ 
             name: sName, email: sEmail, score: userScore, total: finalQuestions.length, 
             model_id: currentModelId, sections: sections, answers: studentAnswers, 
