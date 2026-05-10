@@ -237,7 +237,7 @@
         document.getElementById('quiz-page').classList.add('hidden');
         document.getElementById('result-page').classList.remove('hidden');
         
-        const sections = { tan: 0, ekm: 0, syq: 0, st: 0, mfr: 0, art: 0 };
+                const sections = { tan: 0, ekm: 0, syq: 0, st: 0, mfr: 0, art: 0, ikh: 0 };
         const map = { 
             "التناظر اللفظي": "tan", 
             "إكمال الجمل": "ekm", 
@@ -251,18 +251,31 @@
             const qInType = studentAnswers.filter(a => a.type === key);
             if(qInType.length > 0) {
                 const correct = qInType.filter(a => a.isCorrect).length;
-                sections[map[key]] = Math.round((correct / qInType.length) * 100);
+                const percent = Math.round((correct / qInType.length) * 100);
+                
+                if (map[key] === "art") {
+                    sections.art = percent; 
+                    sections.ikh = percent; 
+                } else {
+                    sections[map[key]] = percent;
+                }
             }
         });
 
         await db.collection("student_results").add({ 
-            name: sName, email: sEmail, score: userScore, total: finalQuestions.length, 
-            model_id: currentModelId, sections: sections, answers: studentAnswers,
+            name: sName, 
+            email: sEmail, 
+            score: userScore, 
+            total: finalQuestions.length, 
+            model_id: currentModelId, 
+            sections: sections, 
+            answers: studentAnswers,
             time: firebase.firestore.FieldValue.serverTimestamp() 
         });
 
         document.getElementById('final-greeting').innerHTML = `جهدك اليوم محل تقدير يا (${sName}) 💐<br>بإصرار وعزيمة ستصل لمستوى أعلى!`;
         document.getElementById('score-text').innerText = `${userScore} / ${finalQuestions.length}`;
+
     }
 </script>
 </body>
