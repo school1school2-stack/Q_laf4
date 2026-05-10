@@ -15,33 +15,40 @@
             --wrong: #e74c3c;
             --passage-bg: rgba(0,0,0,0.03);
         }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-color); display: flex; justify-content: center; padding: 20px; margin: 0; user-select: none; transition: background 0.5s; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-color); display: flex; justify-content: center; padding: 20px; margin: 0; user-select: none; }
+        
+        /* ثيم النبض والحركة */
+        @keyframes pulse { 
+            0% { transform: scale(1); } 
+            50% { transform: scale(1.02); box-shadow: 0 0 15px rgba(44, 62, 80, 0.1); } 
+            100% { transform: scale(1); } 
+        }
+        
         .quiz-card { background: var(--white); width: 100%; max-width: 900px; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.08); border-top: 12px solid var(--main-color); padding: 35px; position: relative; }
         .header { text-align: center; border-bottom: 2px solid #f0f0f0; margin-bottom: 25px; padding-bottom: 15px; }
         .nav-bar { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.02); padding: 15px 25px; border-radius: 10px; margin-bottom: 25px; border: 1px solid #eee; }
         
-        .challenger-box { color: var(--main-color); font-weight: bold; }
         .q-type-badge { background: var(--main-color); color: white; padding: 8px 20px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; }
-        .q-text { font-size: 1.6rem; font-weight: bold; text-align: center; line-height: 1.8; color: #2c3e50; padding: 10px; border-radius: 12px; min-height: 50px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        .q-text { font-size: 1.6rem; font-weight: bold; text-align: center; line-height: 1.8; color: #2c3e50; padding: 10px; }
         
-        .reading-passage { background-color: var(--passage-bg); border-right: 6px solid var(--main-color); padding: 20px; margin: 15px 0; border-radius: 8px; text-align: justify; font-size: 1.2rem; line-height: 1.9; color: #333; width: 100%; box-sizing: border-box; display: block; }
+        .reading-passage { background-color: var(--passage-bg); border-right: 6px solid var(--main-color); padding: 20px; margin: 15px 0; border-radius: 8px; text-align: justify; font-size: 1.2rem; line-height: 1.9; color: #333; }
 
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 25px; }
-        .opt { padding: 20px; border: 2px solid #ecf0f1; border-radius: 12px; cursor: pointer; text-align: center; font-size: 1.3rem; background: #fff; transition: 0.2s; color: #34495e; font-weight: 600; }
-        .opt:hover { border-color: var(--main-color); background: #f9fbfb; }
-        .correct { background: var(--correct) !important; color: white !important; border-color: var(--correct) !important; }
-        .wrong { background: var(--wrong) !important; color: white !important; border-color: var(--wrong) !important; }
-        .btn { background: var(--main-color); color: white; padding: 15px 55px; border: none; border-radius: 8px; cursor: pointer; font-size: 1.1rem; font-weight: bold; display: inline-block; text-decoration: none; }
+        .opt { 
+            padding: 20px; border: 2px solid #ecf0f1; border-radius: 12px; cursor: pointer; 
+            text-align: center; font-size: 1.3rem; background: #fff; transition: 0.3s; 
+            color: #34495e; font-weight: 600; animation: pulse 3s infinite ease-in-out; 
+        }
+        .opt:hover { border-color: var(--main-color); transform: translateY(-3px); }
+        
+        .correct { background: var(--correct) !important; color: white !important; border-color: var(--correct) !important; animation: none !important; }
+        .wrong { background: var(--wrong) !important; color: white !important; border-color: var(--wrong) !important; animation: none !important; }
+        
+        .btn { background: var(--main-color); color: white; padding: 15px 55px; border: none; border-radius: 8px; cursor: pointer; font-size: 1.1rem; font-weight: bold; }
         .hidden { display: none !important; }
         input { width: 80%; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 15px; text-align: center; font-size: 1.1rem; }
-
-        @media (max-width: 600px) {
-            body { padding: 10px; }
-            .quiz-card { padding: 20px 15px; border-top-width: 8px; }
-            .options-grid { grid-template-columns: 1fr; gap: 12px; }
-            .btn { width: 100%; box-sizing: border-box; }
-            input { width: 100%; box-sizing: border-box; }
-        }
+        
+        @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -54,13 +61,13 @@
 
     <div id="lock-screen" class="hidden" style="text-align: center; padding: 40px;">
         <h1 style="font-size: 4rem; margin: 0;">🚫</h1>
-        <h2 style="color: var(--wrong);">تنبيه النظام</h2>
-        <div id="lock-message" style="font-size: 1.3rem; line-height: 1.6; color: #555;"></div>
-        <button class="btn" onclick="location.reload()" style="margin-top: 20px;">العودة</button>
+        <h2 style="color: var(--wrong);">عذراً.. لا يمكن الإعادة</h2>
+        <div id="lock-message" style="font-size: 1.3rem; line-height: 1.6; color: #555; margin-bottom: 20px;"></div>
+        <button class="btn" onclick="location.reload()">العودة للرئيسية</button>
     </div>
 
     <div id="start-page" style="text-align: center;">
-        <p style="font-weight: bold; color: var(--main-color);">أدخل إيميل منصة مدرستي لبدء التحدي</p>
+        <p style="font-weight: bold;">أدخل إيميل منصة مدرستي لبدء التحدي</p>
         <input type="email" id="studentEmail" placeholder="sxxxxxxx@rb.moe.gov.sa">
         <br>
         <button class="btn" onclick="verifyAndStart()">دخول المنصة 🚀</button>
@@ -70,7 +77,7 @@
     <div id="quiz-page" class="hidden">
         <div class="nav-bar">
             <div id="q-counter" style="font-weight: bold;"></div>
-            <div id="challenger-display" class="challenger-box"></div> 
+            <div id="challenger-display" style="font-weight: bold; color: var(--main-color);"></div> 
             <div id="timer" style="font-weight: 900; font-size: 1.6rem; color: var(--wrong);">45</div>
         </div>
         <div style="text-align: right; margin-bottom: 10px;">
@@ -91,6 +98,7 @@
 </div>
 
 <script>
+    // ضع مصفوفتك هنا
     const rawQuizData = [
     // --- التناظر اللفظي (10 أسئلة) ---
     { t: "التناظر اللفظي", q: "غرفة : فندق", opts: ["غصن : شجرة", "شارع : مدينة", "وجه : أنف", "بحر : سمك"], ans: "غصن : شجرة" },
@@ -143,9 +151,9 @@
     { t: "الارتباط والاختلاف", q: "الكلمة المرتبطة بـ (بحر) من حيث المهنة:", opts: ["قبطان", "مهندس", "طيار", "مزارع"], ans: "قبطان" }
 ];
 
-    const currentModelId = " نموذج - 15 ";
+    const currentModelId = "نموذج - 15"; 
     let sName, sEmail, currentIdx = 0, userScore = 0, timer, finalQuestions;
-    let userAnswers = []; // تم الإبقاء عليها لجمع النتائج بدقة
+    let userAnswers = [];
 
     const firebaseConfig = { 
         apiKey: "AIzaSyBkCO7FDQXd89YDf843J4_AtvEFvzzt-R0", 
@@ -164,21 +172,25 @@
         document.getElementById('status-msg').innerText = "جاري التحقق... ⏳";
 
         try {
+            // 1. التحقق من وجود الطالب
             const allowedDoc = await db.collection("allowed_students").doc(emailInput).get();
             if (!allowedDoc.exists) {
-                showLock("هذا الإيميل غير مسجل. يرجى مراجعة المعلم.");
-                return;
+                document.getElementById('status-msg').innerText = "";
+                return alert("هذا الإيميل غير مسجل في كشوفاتنا.");
             }
 
             sName = allowedDoc.data().name;
             sEmail = emailInput;
 
+            // 2. التحقق من منع الإعادة
             const resultCheck = await db.collection("student_results")
                 .where("email", "==", sEmail)
                 .where("model_id", "==", currentModelId).get();
 
             if (!resultCheck.empty) {
-                showLock(`عذراً، لقد سبق لك خوض هذا الاختبار. جرب تحدياً آخر واستمر في التألق!`);
+                document.getElementById('start-page').classList.add('hidden');
+                document.getElementById('lock-screen').classList.remove('hidden');
+                document.getElementById('lock-message').innerText = `يا ${sName}، لقد قمت بأداء هذا النموذج مسبقاً.`;
                 return;
             }
 
@@ -188,12 +200,6 @@
             document.getElementById('quiz-page').classList.remove('hidden');
             loadQuestion();
         } catch (e) { alert("خطأ في الاتصال بالسيرفر."); }
-    }
-
-    function showLock(msg) {
-        document.getElementById('start-page').classList.add('hidden');
-        document.getElementById('lock-screen').classList.remove('hidden');
-        document.getElementById('lock-message').innerHTML = `<p>${msg}</p>`;
     }
 
     function loadQuestion() {
@@ -213,9 +219,8 @@
                 const isCorrect = (o === data.ans);
                 if(isCorrect) userScore++;
 
-                // حفظ الإجابة بدقة متناهية
                 userAnswers.push({
-                    qText: data.q.replace(/<[^>]*>?/gm, '').substring(0, 70) + "...",
+                    qText: data.q.replace(/<[^>]*>?/gm, '').substring(0, 60),
                     qType: data.t,
                     studentAns: o,
                     correctAns: data.ans,
@@ -224,6 +229,7 @@
 
                 document.querySelectorAll('.opt').forEach(el => {
                     el.onclick = null;
+                    el.style.animation = "none";
                     if(el.innerText === data.ans) el.classList.add('correct');
                     else if(el.innerText === o) el.classList.add('wrong');
                 });
@@ -240,13 +246,8 @@
         timer = setInterval(() => {
             s--; document.getElementById('timer').innerText = s;
             if(s<=0) { 
-                clearInterval(timer); 
-                userAnswers.push({
-                    qText: finalQuestions[currentIdx].q.replace(/<[^>]*>?/gm, '').substring(0, 50) + "...",
-                    studentAns: "انتهى الوقت",
-                    correctAns: finalQuestions[currentIdx].ans,
-                    isCorrect: false
-                });
+                clearInterval(timer);
+                userAnswers.push({ qText: "انتهى الوقت", studentAns: "لم يجب", correctAns: finalQuestions[currentIdx].ans, isCorrect: false });
                 nextQuestion(); 
             }
         }, 1000);
@@ -257,12 +258,12 @@
     async function finish() {
         document.getElementById('quiz-page').classList.add('hidden');
         document.getElementById('result-page').classList.remove('hidden');
-        document.getElementById('final-greeting').innerHTML = `جهدك اليوم محل تقدير، وبإصرار وعزيمة ستصل لمستوى أعلى في المرة المقبلة <br> يا (${sName}) 💐💐`;
+        document.getElementById('final-greeting').innerHTML = `جهدك اليوم محل تقدير يا (${sName}) 💐💐`;
         document.getElementById('score-text').innerText = `${userScore} / ${finalQuestions.length}`;
         
         await db.collection("student_results").add({ 
             name: sName, email: sEmail, score: userScore, total: finalQuestions.length, 
-            model_id: currentModelId, answers: userAnswers, // إضافة الإرسال التفصيلي
+            model_id: currentModelId, answers: userAnswers,
             time: firebase.firestore.FieldValue.serverTimestamp() 
         });
     }
